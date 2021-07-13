@@ -1,23 +1,34 @@
-import logo from './logo.svg';
+import React, { useContext, useState } from 'react';
 import './App.css';
+import Quiz from './components/Quiz';
+import QuizContext from './store/quiz-context';
+import Result from './pages/Result';
+import SideNav from './components/SideNav';
+import Timer from './components/Timer';
 
-function App() {
+const App = () => {
+  const { currQues, ques, isLoading } = useContext(QuizContext);
+  const [timeLeft, setTimeLeft] = useState(true);
+
+  const timeHandler = () => {
+    setTimeLeft(false);
+  };
+
+  let content;
+
+  if (currQues < ques.length && timeLeft) {
+    content = <div className='d-flex justify-content-between flex-md-row flex-column'>
+      {!isLoading && <SideNav />}
+      <Quiz />
+      <Timer initialSeconds={10} isOver={timeHandler} />
+    </div>;
+  } else {
+    content = <Result />;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container mt-3'>
+      {content}
     </div>
   );
 }
